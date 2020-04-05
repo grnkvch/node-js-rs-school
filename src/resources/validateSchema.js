@@ -3,7 +3,6 @@ function errorResponse(schemaErrors) {
     const { path, message } = error;
     return { path, message };
   });
-  console.log('errors', errors);
   return {
     status: 'failed',
     errors
@@ -18,7 +17,6 @@ function validateSchema(schema) {
     });
 
     if (error.isJoi) {
-      console.log(error.details.map);
       res.status(400).json(errorResponse(error.details));
     } else {
       return next();
