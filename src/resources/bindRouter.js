@@ -2,14 +2,14 @@ const Router = require('express');
 const validateSchema = require('./validateSchema');
 const config = require('./config');
 
-module.exports = function bindRouter(route) {
-  const router = Router();
+module.exports = function bindRouter(route, options) {
+  const router = Router(options);
 
   const { Model, service, postSchema, putSchema } = config[route];
 
   router.route('/').get(async (req, res) => {
-    const allItems = await service.getAll();
-
+    const { params } = req;
+    const allItems = await service.getAll(params);
     res.json(allItems.map(Model.toResponse));
   });
 
@@ -55,5 +55,5 @@ module.exports = function bindRouter(route) {
     }
   });
 
-  return [route, router];
+  return router;
 };
