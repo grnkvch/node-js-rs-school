@@ -51,6 +51,20 @@ const tasks = new Map(
   ].map(task => [task.id, task])
 );
 
+boards.delete = function boardsDel(id) {
+  [...tasks.values()].forEach(task => {
+    if (task.boardId === id) tasks.delete(task.id);
+  });
+  return Map.prototype.delete.call(this, id);
+};
+
+users.delete = function usersDel(id) {
+  tasks.forEach(task => {
+    if (task.userId === id) task.userId = null;
+  });
+  return Map.prototype.delete.call(this, id);
+};
+
 module.exports = {
   users,
   boards,
