@@ -1,4 +1,4 @@
-const Router = require('express');
+const { Router } = require('express');
 const validateSchema = require('./validateSchema');
 const config = require('./config');
 
@@ -14,9 +14,9 @@ module.exports = function bindRouter(route, options) {
   });
 
   router.route('/').post(validateSchema(postSchema), async (req, res) => {
-    const { body } = req;
+    const { body, params } = req;
     try {
-      const item = await service.create(body);
+      const item = await service.create(params, body);
       res.json(Model.toResponse(item));
     } catch (error) {
       res.status(500).send();

@@ -19,11 +19,11 @@ app.use('/', (req, res, next) => {
   next();
 });
 
-const boardRouter = bindRouter('/boards');
-const taskRouter = require('./resources/tasks/router');
-
-app.use('/boards', boardRouter);
+app.use('/boards', bindRouter('/boards'));
 app.use('/users', bindRouter('/users'));
-boardRouter.use('/', taskRouter);
+app.use(
+  '/boards/:boardId/tasks',
+  bindRouter('/boards/:boardId/tasks', { mergeParams: true })
+);
 
 module.exports = app;
