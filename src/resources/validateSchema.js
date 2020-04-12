@@ -1,4 +1,4 @@
-function errorResponse(schemaErrors) {
+function validationErrorResponse(schemaErrors) {
   const errors = schemaErrors.map(error => {
     const { path, message } = error;
     return { path, message };
@@ -16,12 +16,9 @@ function validateSchema(schema) {
       allowUnknown: false
     });
 
-    if (error.isJoi) {
-      res.status(400).json(errorResponse(error.details));
-    } else {
-      return next();
-    }
+    if (error.isJoi) return next(error);
+    return next();
   };
 }
 
-module.exports = validateSchema;
+module.exports = { validateSchema, validationErrorResponse };
