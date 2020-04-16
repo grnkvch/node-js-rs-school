@@ -1,4 +1,5 @@
 const { tasks } = require('../memory.repository');
+const Model = require('./model');
 
 const getAll = async () => {
   return [...tasks.values()];
@@ -9,8 +10,9 @@ const getById = async id => {
 };
 
 const create = async data => {
-  tasks.set(data.id, data);
-  return data;
+  const newTask = new Model(data);
+  tasks.set(newTask.id, newTask);
+  return newTask;
 };
 
 const update = async data => {

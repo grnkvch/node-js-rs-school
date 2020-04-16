@@ -1,4 +1,6 @@
 const { users } = require('../memory.repository');
+const Model = require('./model');
+
 const getAll = async () => {
   // TODO: mock implementation. should be replaced during task development
   return [...users.values()];
@@ -9,8 +11,9 @@ const getById = async id => {
 };
 
 const create = async data => {
-  users.set(data.id, data);
-  return data;
+  const newUser = new Model(data);
+  users.set(newUser.id, newUser);
+  return newUser;
 };
 
 const update = async data => {

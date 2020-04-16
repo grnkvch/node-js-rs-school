@@ -1,4 +1,5 @@
 const { boards } = require('../memory.repository');
+const Model = require('./model');
 
 const getAll = async () => {
   // TODO: mock implementation. should be replaced during task development
@@ -10,8 +11,9 @@ const getById = async id => {
 };
 
 const create = async data => {
-  boards.set(data.id, data);
-  return data;
+  const newBoard = new Model(data);
+  boards.set(newBoard.id, newBoard);
+  return newBoard;
 };
 
 const update = async data => {
