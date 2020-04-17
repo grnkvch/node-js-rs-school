@@ -1,4 +1,4 @@
-const dataRepo = require('./memory.repository');
+const dataRepo = require('./db.repository');
 
 const getAll = () => dataRepo.getAll();
 const getById = ({ id }) => dataRepo.getById(id);
