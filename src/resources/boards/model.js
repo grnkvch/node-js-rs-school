@@ -1,30 +1,40 @@
 const uuid = require('uuid');
+const mongoose = require('mongoose');
 
-class Column {
-  constructor({ id = uuid(), title = 'COLUMN_TITLE', order = 0 } = {}) {
-    this.id = id;
-    this.title = title;
-    this.order = order;
-  }
-}
-class Board {
-  constructor({ id = uuid(), title = 'BOARD_TITLE', columns = [] } = {}) {
-    this.id = id;
-    this.title = title;
-    this.columns = columns.map(
-      // eslint-disable-next-line no-shadow
-      ({ title, order } = {}, index) =>
-        new Column({
-          title,
-          order: Number.isInteger(order) ? order : index
-        })
-    );
-  }
+const columnSchema = new mongoose.Schema({
+  _id: {
+    type: String,
+    default: uuid,
+    alias: 'id'
+  },
+  title: String,
+  order: Number
+});
 
-  static toResponse(user) {
-    const { id, title, columns } = user;
-    return { id, title, columns };
-  }
-}
+const boardSchema = new mongoose.Schema({
+  _id: {
+    type: String,
+    default: uuid,
+    alias: 'id'
+  },
+  title: String,
+  columns: [columnSchema]
+});
+
+boardSchema.statics.toResponse = function toResponse(board) {
+  const { id, title, columns } = board;
+  return {
+    id,
+    title,
+    // eslint-disable-next-line no-shadow
+    columns: columns.map(({ id, title, order }) => ({
+      id,
+      title,
+      order
+    }))
+  };
+};
+
+const Board = mongoose.model('Board', boardSchema);
 
 module.exports = Board;
