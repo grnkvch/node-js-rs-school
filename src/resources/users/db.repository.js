@@ -20,10 +20,15 @@ const deleteItem = async id => {
   return Model.findByIdAndDelete(id);
 };
 
+const getByLogin = async login => {
+  return Model.findOne({ login });
+};
+
 module.exports = {
   getAll,
   getById,
   create,
   update,
-  delete: deleteItem
+  delete: deleteItem,
+  getByLogin
 };

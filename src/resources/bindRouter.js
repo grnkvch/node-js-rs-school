@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { NOT_FOUND, NO_CONTENT } = require('http-status-codes');
+const { NOT_FOUND, NO_CONTENT, getStatusText } = require('http-status-codes');
 const createError = require('http-errors');
 
 const { validateSchema } = require('./validateSchema');
@@ -37,7 +37,7 @@ module.exports = function bindRouter(route, options) {
       if (item) {
         return res.json(Model.toResponse(item));
       }
-      throw createError(NOT_FOUND, 'Item not found');
+      throw createError(NOT_FOUND, getStatusText(NOT_FOUND));
     } catch (error) {
       return next(error);
     }
@@ -62,7 +62,7 @@ module.exports = function bindRouter(route, options) {
       if (success) {
         return res.status(NO_CONTENT).send();
       }
-      throw createError(NOT_FOUND, 'Item not found');
+      throw createError(NOT_FOUND, getStatusText(NOT_FOUND));
     } catch (error) {
       return next(error);
     }
