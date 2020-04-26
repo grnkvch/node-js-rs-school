@@ -5,10 +5,12 @@ const YAML = require('yamljs');
 const { NOT_FOUND } = require('http-status-codes');
 const createError = require('http-errors');
 
+const { router: loginRouter } = require('./resources/login');
 const bindRouter = require('./resources/bindRouter');
 
 const errorHandler = require('./common/errorHandler');
 const requestLogMiddleware = require('./common/requestLogMiddleware');
+const { checkTokenMiddleware } = require('./common/tokenUtil');
 
 const app = express();
 const swaggerDocument = YAML.load(path.join(__dirname, '../doc/api.yaml'));
@@ -27,10 +29,13 @@ app.use('/', (req, res, next) => {
   next();
 });
 
-app.use('/boards', bindRouter('/boards'));
-app.use('/users', bindRouter('/users'));
+app.use('/login', loginRouter);
+
+app.use('/boards', checkTokenMiddleware, bindRouter('/boards'));
+app.use('/users', checkTokenMiddleware, bindRouter('/users'));
 app.use(
   '/boards/:boardId/tasks',
+  checkTokenMiddleware,
   bindRouter('/boards/:boardId/tasks', { mergeParams: true })
 );
 
