@@ -8,7 +8,10 @@ const create = async (params, data) => {
   const passwordHash = await bcrypt.hash(data.password, 10);
   return dataRepo.create({ ...data, password: passwordHash });
 };
-const update = ({ id }, data) => dataRepo.update({ id, ...data });
+const update = async ({ id }, { password, ...data }) => {
+  if (password) data.password = await bcrypt.hash(password, 10);
+  return dataRepo.update({ id, ...data });
+};
 const deleteItem = async ({ id }) => {
   const deletedUser = await dataRepo.delete(id);
   const allTasks = await tasksService.getAll();
